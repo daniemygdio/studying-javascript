@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+	<canvas id="myCanvas" width="800" height="800"
+	style="border:1px solid #c3c3c3;">
+	Your browser does not support the canvas element.
+
+	</canvas>
+
+	<script>
+		var canvas = document.getElementById("myCanvas"),
+			ctx = canvas.getContext("2d");
+
+		drawCreeper();		
+		var status = 0;
+		canvas.addEventListener('click', function changeChar() {if(status % 2 == 0) {				
+				drawSheep();
+			} else {
+				drawCreeper();
+			}
+			status++;
+			if (status == 10) { status = 0; }
+		}, false);
+		
+		function drawSheep() {
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(0,0,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(100,0,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(200,0,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(300,0,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(400,0,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(500,0,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(600,0,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(700,0,100,100);
+
+			// SECOND LINE 
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(0,100,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(100,100,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(200,100,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(300,100,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(400,100,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(500,100,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(600,100,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(700,100,100,100);
+
+			// LINE 3
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(0,200,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(100,200,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(200,200,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(300,200,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(400,200,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(500,200,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(600,200,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(700,200,100,100);
+
+			// LINE 4
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(0,300,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(100,300,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(200,300,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(300,300,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(400,300,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(500,300,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(600,300,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(700,300,100,100);
+
+			// LINE 5
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(0,400,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(100,400,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(200,400,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(300,400,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(400,400,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(500,400,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(600,400,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(700,400,100,100);
+
+			// LINE 6
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(0,500,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(100,500,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(200,500,100,100);
+
+			ctx.fillStyle = "#ff66cc";
+			ctx.fillRect(300,500,100,100);
+
+			ctx.fillStyle = "#ff66cc";
+			ctx.fillRect(400,500,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(500,500,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(600,500,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(700,500,100,100);
+
+				// LINE 7
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(0,600,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(100,600,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(200,600,100,100);
+
+			ctx.fillStyle = "#ffcce6";
+			ctx.fillRect(300,600,100,100);
+
+			ctx.fillStyle = "#ffcce6";
+			ctx.fillRect(400,600,100,100);
+
+			ctx.fillStyle = "#ffcccc";
+			ctx.fillRect(500,600,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(600,600,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(700,600,100,100);
+
+				// LINE 8
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(0,700,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(100,700,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(200,700,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(300,700,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(400,700,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(500,700,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(600,700,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(700,700,100,100);		
+		}
+
+		function drawCreeper() {
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(0,0,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(100,0,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(200,0,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(300,0,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(400,0,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(500,0,100,100);
+
+			ctx.fillStyle = "##008000";
+			ctx.fillRect(600,0,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(700,0,100,100);
+
+			// SECOND LINE 
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(0,100,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(100,100,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(200,100,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(300,100,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(400,100,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(500,100,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(600,100,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(700,100,100,100);
+
+			// LINE 3
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(0,200,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(100,200,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(200,200,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(300,200,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(400,200,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(500,200,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(600,200,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(700,200,100,100);
+
+			// LINE 4
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(0,300,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(100,300,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(200,300,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(300,300,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(400,300,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(500,300,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(600,300,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(700,300,100,100);
+
+			// LINE 5
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(0,400,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(100,400,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(200,400,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(300,400,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(400,400,100,100);
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(500,400,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(600,400,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(700,400,100,100);
+
+			// LINE 6
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(0,500,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(100,500,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(200,500,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(300,500,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(400,500,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(500,500,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(600,500,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(700,500,100,100);
+
+				// LINE 7
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(0,600,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(100,600,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(200,600,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(300,600,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(400,600,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(500,600,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(600,600,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(700,600,100,100);
+
+				// LINE 8
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(0,700,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(100,700,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(200,700,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(300,700,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(400,700,100,100);
+
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(500,700,100,100);
+
+			ctx.fillStyle = "#008000";
+			ctx.fillRect(600,700,100,100);
+
+			ctx.fillStyle = "#00cc00";
+			ctx.fillRect(700,700,100,100);		
+		}
+		
+	</script>
+
+	<!-- 
+		DARK GREEN - #008000
+		LIGHT GREEN - #00cc00
+		WHITE - #ffffff
+		BLACK - #000000
+	-->
+
+</body>
+</html>
