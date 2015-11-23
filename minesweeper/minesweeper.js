@@ -1,4 +1,7 @@
-var board = [];
+var board = [0, 0, 0, 0, 0];
+
+var canvas = document.getElementById('board');
+var context = canvas.getContext('2d');
 
 window.onload = function() {
 	// hiding images used in the canvas
@@ -13,54 +16,91 @@ window.onload = function() {
 
 	loadBoard();
 	renderBoard();
-}
+};
 
 function loadBoard() {
-	board = [0, 0, 0, 0, 0];
+	board = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+	
+
+	/*board = [0, 0, 0, 0, 0,
+			 1, 2, 3, 4, 5,
+			 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0,
+			 0, 0, 0, 0, 0,];*/
 }
 
 function renderBoard() {
-	var image = "", i = 0;
+	var image_name = "", image, i = 0;
+	var offset = 25;
 
 	for (i = 0; i < board.length; i++) {
-		switch() {
+		
+		switch(board[i]) {
 			case 0:
 				// hidden square
-				image = "hidden";
+				image_name = "hidden";
 				break;
 			case 1:
 				// exposed blank square
-				image = "exposedBlank";
+				image_name = "exposedBlank";
 				break;
 			case 2:
 				// exposed bomb
-				image = "exposedBomb";
+				image_name = "exposedBomb";
 				break;
 			case 3:
 				// flagged square
-				image = "flagged";
+				image_name = "flagged";
 				break;
 			case 4:
 				// exposed one
-				image = "exposedOne";
+				image_name = "exposedOne";
 				break;
 			case 5:
 				// exposed two
-				image = "exposedTwo";
+				image_name = "exposedTwo";
 				break;
 			case 6:
 				// exposed three
-				image = "exposedThree";
+				image_name = "exposedThree";
 				break;
 			case 7:
 				// exposed four
-				image = "exposedFour";
-				break;			
+				image_name = "exposedFour";
+				break;	
+			default:
+				image_name = "hidden";
+				break;
 		}
+		
+		var row = Math.floor(i / offset),
+			column = i - (row*offset);
 
-		var canvas = document.getElementById("board"),
-		ctx = canvas.getContext("2d");
-		img = document.getElementById(image);
-		ctx.drawImage(img, i+30, i+30);
-	}	
+		image = document.getElementById(image_name);
+		context.drawImage(image, column*30, row*30);	
+	}
 }
