@@ -1,4 +1,5 @@
-var board = [0, 0, 0, 0, 0];
+var board = [];
+var bombs = [];
 
 var canvas = document.getElementById('board');
 var context = canvas.getContext('2d');
@@ -14,10 +15,45 @@ window.onload = function() {
 	document.getElementById("hidden").style.display = "none";
 	document.getElementById("flagged").style.display = "none";
 
+
 	loadBoard();
+
+	placeBomb(4, 5);
+	placeBomb(1, 1);
+
 	renderBoard();
+
+	document.getElementById("text").innerHTML = isBomb(7, 5);
+
 };
 
+/*
+	Places a bomb in the board.
+*/
+function placeBomb(row, column) {
+	var offset = 25;
+	var index = row * offset + column;
+
+	bombs.push(index);
+}
+
+/*
+	Returns true if the given position in the board is a bomb and false otherwise.
+*/
+function isBomb(row, column) {
+	var offset = 25;
+	var index = row * offset + column;
+
+	if (bombs.indexOf(index) != -1) {
+		return true;
+	}
+
+	return false;
+}
+
+/*
+	Creates the array representing the board to be rendered.
+*/
 function loadBoard() {
 	board = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -45,16 +81,20 @@ function loadBoard() {
 			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 	
-
-	/*board = [0, 0, 0, 0, 0,
+/*
+	board = [0, 0, 0, 0, 0,
 			 1, 2, 3, 4, 5,
 			 0, 0, 0, 0, 0,
 			 0, 0, 0, 0, 0,
 			 0, 0, 0, 0, 0,];*/
+
 }
 
+/*
+	Renders the array representing the board.
+*/
 function renderBoard() {
-	var image_name = "", image, i = 0;
+	var image_name = "", image = null, i = 0;
 	var offset = 25;
 
 	for (i = 0; i < board.length; i++) {
