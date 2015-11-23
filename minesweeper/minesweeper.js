@@ -1,11 +1,13 @@
-var board = [];
-var bombs = [];
-
 var canvas = document.getElementById('board');
 var context = canvas.getContext('2d');
 
+var board = [];
+var bombs = [];
+
+var offset = 0; // width of the board to help calculate board from 1D array
+
 window.onload = function() {
-	// hiding images used in the canvas
+	// hiding img elements used to retrieve the images for the canvas
 	document.getElementById("exposedBlank").style.display = "none";
 	document.getElementById("exposedBomb").style.display = "none";
 	document.getElementById("exposedOne").style.display = "none";
@@ -15,7 +17,6 @@ window.onload = function() {
 	document.getElementById("hidden").style.display = "none";
 	document.getElementById("flagged").style.display = "none";
 
-
 	loadBoard();
 
 	placeBomb(4, 5);
@@ -23,7 +24,7 @@ window.onload = function() {
 
 	renderBoard();
 
-	document.getElementById("text").innerHTML = isBomb(7, 5);
+	console.log("Is bomb: "+isBomb(7, 5));
 
 };
 
@@ -31,7 +32,6 @@ window.onload = function() {
 	Places a bomb in the board.
 */
 function placeBomb(row, column) {
-	var offset = 25;
 	var index = row * offset + column;
 
 	bombs.push(index);
@@ -40,8 +40,7 @@ function placeBomb(row, column) {
 /*
 	Returns true if the given position in the board is a bomb and false otherwise.
 */
-function isBomb(row, column) {
-	var offset = 25;
+function isBomb(row, column) {	
 	var index = row * offset + column;
 
 	if (bombs.indexOf(index) != -1) {
@@ -54,40 +53,46 @@ function isBomb(row, column) {
 /*
 	Creates the array representing the board to be rendered.
 */
-function loadBoard() {
-	board = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-	
-/*
-	board = [0, 0, 0, 0, 0,
-			 1, 2, 3, 4, 5,
-			 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0,];*/
+function loadBoard(width, height, numberOfBombs) {
+	if (width <= 0 || isNaN(width)) {
+		width = 25;
+	}
 
+	if (height <= 0 || isNaN(height)) {
+		height = 25;
+	}
+
+	var sizeOfBoard = width * height;
+	offset = width;
+
+	var i = 0;
+	for (i = 0; i < sizeOfBoard; i++) {
+		board[i] = 0;
+	}
+
+	// PLACE BOMS
+	if (numberOfBombs <= 0 || isNaN(numberOfBombs)) {
+		if (numberOfBombs >= sizeOfBoard) {
+			numberOfBombs = sizeOfBoard - (sizeOfBoard*0.1);
+		}
+
+		numberOfBombs = Math.floor(sizeOfBoard*0.5);
+	}
+
+	console.log(width);
+	console.log(height);
+	console.log(numberOfBombs);		
+
+	// CALCULATE NUMBERS AROUND BOMBS
+
+}
+
+/*
+	Returns a random integer between min (included) and max (included)
+	Using Math.round() will give you a non-uniform distribution!
+*/
+function getRandomIntInclusive(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 /*
@@ -95,7 +100,6 @@ function loadBoard() {
 */
 function renderBoard() {
 	var image_name = "", image = null, i = 0;
-	var offset = 25;
 
 	for (i = 0; i < board.length; i++) {
 		
