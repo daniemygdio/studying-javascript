@@ -4,6 +4,17 @@ var context = canvas.getContext('2d');
 var board = [];
 var bombs = [];
 
+var HIDDEN_BLANK_SQUARE = 0,
+	FLAGGED_BLANK_SQUARE = 1
+	HIDDEN_BOMB_SQUARE = 2,
+	FLAGGED_BOMB_SQUARE = 3,
+	EXPOSED_BOMB_SQUARE = 4,
+	EXPOSED_BLANK_SQUARE = 5,
+	EXPOSED_NUMBER_ONE = 6,
+	EXPOSED_NUMBER_TWO = 7,
+	EXPOSED_NUMBER_THREE = 8,
+	EXPOSED_NUMBER_FOUR = 9;
+
 var offset = 0; // width of the board to help calculate board from 1D array
 
 window.onload = function() {
@@ -34,7 +45,7 @@ window.onload = function() {
 function placeBomb(row, column) {
 	var index = row * offset + column;
 
-	bombs.push(index);
+	board[index] = HIDDEN_BOMB_SQUARE;	
 }
 
 /*
@@ -65,7 +76,7 @@ function loadBoard(width, height, numberOfBombs) {
 
 	var i = 0;
 	for (i = 0; i < sizeOfBoard; i++) {
-		board[i] = 0;
+		board[i] = HIDDEN_BLANK_SQUARE;
 	}
 
 	// PLACE BOMS
@@ -88,12 +99,8 @@ function loadBoard(width, height, numberOfBombs) {
 			i--;
 		} else {
 			placeBomb(bomb);
-			board[bomb] = 2;
 		}
 	}
-
-	// CALCULATE NUMBERS AROUND BOMBS
-
 }
 
 /*
@@ -113,38 +120,46 @@ function renderBoard() {
 	for (i = 0; i < board.length; i++) {
 		
 		switch(board[i]) {
-			case 0:
+			case HIDDEN_BLANK_SQUARE:
 				// hidden square
 				image_name = "hidden";
 				break;
-			case 1:
+			case FLAGGED_BLANK_SQUARE:
 				// exposed blank square
-				image_name = "exposedBlank";
-				break;
-			case 2:
-				// exposed bomb
-				image_name = "exposedBomb";
-				break;
-			case 3:
-				// flagged square
 				image_name = "flagged";
 				break;
-			case 4:
+			case EXPOSED_BLANK_SQUARE:
+				// exposed bomb
+				image_name = "exposedBlank";
+				break;
+			case HIDDEN_BOMB_SQUARE:
+				// flagged square
+				image_name = "hidden";
+				break;
+			case EXPOSED_BOMB_SQUARE:
 				// exposed one
+				image_name = "exposedBomb";
+				break;
+			case FLAGGED_BOMB_SQUARE:
+				// exposed two
+				image_name = "flagged";
+				break;
+			case EXPOSED_NUMBER_ONE:
+				// exposed three
 				image_name = "exposedOne";
 				break;
-			case 5:
-				// exposed two
+			case EXPOSED_NUMBER_TWO:
+				// exposed four
 				image_name = "exposedTwo";
-				break;
-			case 6:
-				// exposed three
+				break;	
+			case EXPOSED_NUMBER_THREE:
+				// exposed four
 				image_name = "exposedThree";
-				break;
-			case 7:
+				break;				
+			case EXPOSED_NUMBER_FOUR:
 				// exposed four
 				image_name = "exposedFour";
-				break;	
+				break;				
 			default:
 				image_name = "hidden";
 				break;
