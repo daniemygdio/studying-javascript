@@ -17,7 +17,7 @@ window.onload = function() {
 	document.getElementById("hidden").style.display = "none";
 	document.getElementById("flagged").style.display = "none";
 
-	loadBoard();
+	loadBoard(0,0,5);
 
 	placeBomb(4, 5);
 	placeBomb(1, 1);
@@ -40,9 +40,7 @@ function placeBomb(row, column) {
 /*
 	Returns true if the given position in the board is a bomb and false otherwise.
 */
-function isBomb(row, column) {	
-	var index = row * offset + column;
-
+function isBomb(index) {	
 	if (bombs.indexOf(index) != -1) {
 		return true;
 	}
@@ -82,6 +80,17 @@ function loadBoard(width, height, numberOfBombs) {
 	console.log(width);
 	console.log(height);
 	console.log(numberOfBombs);		
+
+	for(i = 0; i < numberOfBombs; i++) {
+		var bomb = getRandomIntInclusive(0, sizeOfBoard);
+
+		if (bombs.indexOf(bomb) != -1) {
+			i--;
+		} else {
+			placeBomb(bomb);
+			board[bomb] = 2;
+		}
+	}
 
 	// CALCULATE NUMBERS AROUND BOMBS
 
