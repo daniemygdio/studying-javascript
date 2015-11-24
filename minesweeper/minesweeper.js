@@ -30,8 +30,8 @@ window.onload = function() {
 	document.getElementById("hidden").style.display = "none";
 	document.getElementById("flagged").style.display = "none";
 
-	loadBoard(10, 10, 3);
-
+	loadBoard()
+;
 	placeBomb(4, 5);
 	placeBomb(1, 1);
 
@@ -52,8 +52,13 @@ function placeBomb(index) {
 
 /*
 	Returns true if the given position in the board is a bomb and false otherwise.
+	False if index is out of bounds of board[].
 */
-function isBomb(index) {	
+function isBomb(index) {
+	if (index > board.length || index < 0) {
+		return false;
+	}
+
 	if(board[index] == HIDDEN_BOMB_SQUARE 
 		|| board[index] == EXPOSED_BOMB_SQUARE
 		|| board[index] == FLAGGED_BOMB_SQUARE) {
@@ -97,7 +102,7 @@ function loadBoard(width, height, numberOfBombs) {
 	console.log(numberOfBombs);		
 
 	for(i = 0; i < numberOfBombs; i++) {
-		var bomb = getRandomIntInclusive(0, sizeOfBoard);
+		var bomb = getRandomIntInclusive(0, (sizeOfBoard-1));
 
 		if (isBomb()) {
 			i--;
@@ -210,24 +215,66 @@ function exposeArea(index) {
 	}
 }
 
+function flagSquare(index) {
+	if (isNaN(index) || index > board.length || index < 0) {
+		return -1;
+	}
+
+	if(board[index] == HIDDEN_BOMB_SQUARE) {
+		board[index] = FLAGGED_BOMB_SQUARE;
+		return;
+	}
+
+	if(board[index] == HIDDEN_BLANK_SQUARE) {
+		board[index] = FLAGGED_BLANK_SQUARE;
+		return;
+	}
+
+	if(board[index] == FLAGGED_BLANK_SQUARE) {
+		board[index] = HIDDEN_BLANK_SQUARE;
+		return;
+	}
+
+	if(board[index] == FLAGGED_BOMB_SQUARE) {
+		board[index] = HIDDEN_BOMB_SQUARE;
+		return;
+	}
+
+	renderBoard();
+}
+
 function countBombsAround(index) {
 	var count = 0;
 
 	var x = Math.floor(index / offset),
 		y = index - (x*offset);
 
-	// y - 1
-	if(isBomb(index-1)) { count++; }
+	/*
+		ooo
+		xmo  y - 1
+		ooo
+	*/	
+	if(((index - (x*offset)) != 0) && isBomb(index-1)) { count++; }
+	 
+	/*	
+		oxo
+		omo  y = 0
+		oxo
+	*/
+	if((Math.floor(index / offset) > 0) && isBomb(index-offset)) { count++; }
+	if(isBomb(index+offset)) { count++; }
 	
-	// y = 0
+	/*
+		ooo
+		omx  y + 1
+		ooo
+	*/	
+	if(((index - (x*offset)) != (offset-1)) && isBomb(index+1)) { count++; }
 	
-	// y + 1
-	if(isBomb(index+1)) { count++; }
-
 	return count;
 }
 
-canvas.addEventListener('click', function(event) {
+canvas.addEventListener('click', function (event) {
 	var clickX = event.pageX,
 		clickY = event.pageY,
 		row = Math.floor(clickX / SQUARE_HEIGHT),
@@ -247,3 +294,21 @@ canvas.addEventListener('click', function(event) {
 	renderBoard();
 	
 }, false);
+
+canvas.addEventListener('mousedown', function (event) {
+    var clickX = event.pageX,
+		clickY = event.pageY,
+		row = Math.floor(clickX / SQUARE_HEIGHT),
+		column = Math.floor(clickY / SQUARE_WIDTH),
+		index = (column * offset) + row;
+
+    var right = 2;
+   	if(event.button === right){
+        flagSquare(index);
+        renderBoard();
+    }
+}, false);
+
+canvas.oncontextmenu = function (event) {
+    event.preventDefault();
+};
