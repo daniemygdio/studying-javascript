@@ -4,8 +4,8 @@ var context = canvas.getContext('2d');
 var board = [];
 var bombs = [];
 
-var HIDDEN_BLANK_SQUARE = 0,
-	FLAGGED_BLANK_SQUARE = 1
+const HIDDEN_BLANK_SQUARE = 0,
+	FLAGGED_BLANK_SQUARE = 1,
 	HIDDEN_BOMB_SQUARE = 2,
 	FLAGGED_BOMB_SQUARE = 3,
 	EXPOSED_BOMB_SQUARE = 4,
@@ -14,6 +14,8 @@ var HIDDEN_BLANK_SQUARE = 0,
 	EXPOSED_NUMBER_TWO = 7,
 	EXPOSED_NUMBER_THREE = 8,
 	EXPOSED_NUMBER_FOUR = 9;
+
+const SQUARE_WIDTH = 30, SQUARE_HEIGHT = 30;
 
 var offset = 0; // width of the board to help calculate board from 1D array
 
@@ -28,7 +30,7 @@ window.onload = function() {
 	document.getElementById("hidden").style.display = "none";
 	document.getElementById("flagged").style.display = "none";
 
-	loadBoard(0,0,5);
+	loadBoard(10, 10, 3);
 
 	placeBomb(4, 5);
 	placeBomb(1, 1);
@@ -36,15 +38,15 @@ window.onload = function() {
 	renderBoard();
 
 	console.log("Is bomb: "+isBomb(7, 5));
-
 };
 
 /*
 	Places a bomb in the board.
 */
-function placeBomb(row, column) {
-	var index = row * offset + column;
+function placeBomb(index) {
+	//var index = row * offset + column;
 
+	bombs.push(index);
 	board[index] = HIDDEN_BOMB_SQUARE;	
 }
 
@@ -52,7 +54,9 @@ function placeBomb(row, column) {
 	Returns true if the given position in the board is a bomb and false otherwise.
 */
 function isBomb(index) {	
-	if (bombs.indexOf(index) != -1) {
+	if(board[index] == HIDDEN_BOMB_SQUARE 
+		|| board[index] == EXPOSED_BOMB_SQUARE
+		|| board[index] == FLAGGED_BOMB_SQUARE) {
 		return true;
 	}
 
@@ -64,11 +68,11 @@ function isBomb(index) {
 */
 function loadBoard(width, height, numberOfBombs) {
 	if (width <= 0 || isNaN(width)) {
-		width = 25;
+		width = 25; // standard width
 	}
 
 	if (height <= 0 || isNaN(height)) {
-		height = 25;
+		height = 25; // standard height
 	}
 
 	var sizeOfBoard = width * height;
@@ -85,7 +89,7 @@ function loadBoard(width, height, numberOfBombs) {
 			numberOfBombs = sizeOfBoard - (sizeOfBoard*0.1);
 		}
 
-		numberOfBombs = Math.floor(sizeOfBoard*0.5);
+		numberOfBombs = Math.floor(sizeOfBoard*0.3);
 	}
 
 	console.log(width);
@@ -95,7 +99,7 @@ function loadBoard(width, height, numberOfBombs) {
 	for(i = 0; i < numberOfBombs; i++) {
 		var bomb = getRandomIntInclusive(0, sizeOfBoard);
 
-		if (bombs.indexOf(bomb) != -1) {
+		if (isBomb()) {
 			i--;
 		} else {
 			placeBomb(bomb);
@@ -108,7 +112,7 @@ function loadBoard(width, height, numberOfBombs) {
 	Using Math.round() will give you a non-uniform distribution!
 */
 function getRandomIntInclusive(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 /*
@@ -170,5 +174,76 @@ function renderBoard() {
 
 		image = document.getElementById(image_name);
 		context.drawImage(image, column*30, row*30);	
+		console.log(board.toString());
 	}
 }
+
+function gameOver() {
+	var i = 0;
+
+	// expose all the bombs, but not the flagged squares
+	// #1 - iterate over array looking for HIDDEN_BOMB_SQUARE
+	// #2 - find them, make them EXPOSED_HIDDEN_BOMBS
+	// #3 - LATER - make something to stop new changes - or restart game
+
+	for (i = 0; i < board.length; i++) {
+		if(board[i] == HIDDEN_BOMB_SQUARE) {
+			board[i] = EXPOSED_BOMB_SQUARE;
+		}
+	}
+	renderBoard();
+	window.alert("GAME OVER!");
+}
+
+function exposeArea(index) {
+	if(board[index] == HIDDEN_BLANK_SQUARE) {
+		board[index] = EXPOSED_BLANK_SQUARE;
+	}
+
+	switch(countBombsAround(index)) {
+		case 0: board[index] = EXPOSED_BLANK_SQUARE; break;
+		case 1: board[index] = EXPOSED_NUMBER_ONE; break;
+		case 2: board[index] = EXPOSED_NUMBER_TWO; break;
+		case 3: board[index] = EXPOSED_NUMBER_THREE; break;
+		case 4: board[index] = EXPOSED_NUMBER_FOUR; break;
+		default: board[index] = EXPOSED_BLANK_SQUARE; break;
+	}
+}
+
+function countBombsAround(index) {
+	var count = 0;
+
+	var x = Math.floor(index / offset),
+		y = index - (x*offset);
+
+	// y - 1
+	if(isBomb(index-1)) { count++; }
+	
+	// y = 0
+	
+	// y + 1
+	if(isBomb(index+1)) { count++; }
+
+	return count;
+}
+
+canvas.addEventListener('click', function(event) {
+	var clickX = event.pageX,
+		clickY = event.pageY,
+		row = Math.floor(clickX / SQUARE_HEIGHT),
+		column = Math.floor(clickY / SQUARE_WIDTH),
+		index = (column * offset) + row;
+
+	if(board[index] == HIDDEN_BOMB_SQUARE 
+		&& board[index] != FLAGGED_BOMB_SQUARE) {
+		gameOver();
+	} 
+
+	if(board[index] == HIDDEN_BLANK_SQUARE
+		&& board[index] != FLAGGED_BLANK_SQUARE) {
+		exposeArea(index);
+	}
+
+	renderBoard();
+	
+}, false);
