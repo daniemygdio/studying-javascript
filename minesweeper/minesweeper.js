@@ -1,3 +1,4 @@
+"use strict";
 var canvas = document.getElementById('board');
 var context = canvas.getContext('2d');
 
@@ -30,8 +31,7 @@ window.onload = function() {
 	document.getElementById("hidden").style.display = "none";
 	document.getElementById("flagged").style.display = "none";
 
-	loadBoard()
-;
+	loadBoard();
 	placeBomb(4, 5);
 	placeBomb(1, 1);
 
@@ -183,6 +183,10 @@ function renderBoard() {
 	}
 }
 
+/*
+	Exposes all bombs.
+	TODO: make game stop.
+*/
 function gameOver() {
 	var i = 0;
 
@@ -196,15 +200,20 @@ function gameOver() {
 			board[i] = EXPOSED_BOMB_SQUARE;
 		}
 	}
-	renderBoard();
-	window.alert("GAME OVER!");
 }
 
-function exposeArea(index) {
-	if(board[index] == HIDDEN_BLANK_SQUARE) {
-		board[index] = EXPOSED_BLANK_SQUARE;
-	}
+/*
+	Exposes blank area.
+*/
+function exposeBlankArea(index) {
+	
+}
 
+function exposeBlankSquare(index) {
+	if (isNaN(index) || index > board.length || index < 0) {
+		return -1;
+	}
+	
 	switch(countBombsAround(index)) {
 		case 0: board[index] = EXPOSED_BLANK_SQUARE; break;
 		case 1: board[index] = EXPOSED_NUMBER_ONE; break;
@@ -215,6 +224,26 @@ function exposeArea(index) {
 	}
 }
 
+function exposeSquare(index) {
+	if (isNaN(index) || index > board.length || index < 0) {
+		return -1;
+	}
+	
+	if(board[index] == HIDDEN_BOMB_SQUARE 
+		&& board[index] != FLAGGED_BOMB_SQUARE) {
+		gameOver();
+	} 
+
+	if(board[index] == HIDDEN_BLANK_SQUARE
+		&& board[index] != FLAGGED_BLANK_SQUARE) {
+		exposeBlankSquare(index);
+	}
+
+}
+
+/*
+	Flags a square or removes the flag if it's already flagged.
+*/
 function flagSquare(index) {
 	if (isNaN(index) || index > board.length || index < 0) {
 		return -1;
@@ -239,13 +268,15 @@ function flagSquare(index) {
 		board[index] = HIDDEN_BOMB_SQUARE;
 		return;
 	}
-
-	renderBoard();
 }
 
 function countBombsAround(index) {
 	var count = 0;
 
+	if (isNaN(index) || index > board.length || index < 0) {
+		return -1;
+	}
+	
 	var x = Math.floor(index / offset),
 		y = index - (x*offset);
 
@@ -274,6 +305,7 @@ function countBombsAround(index) {
 	return count;
 }
 
+
 canvas.addEventListener('click', function (event) {
 	var clickX = event.pageX,
 		clickY = event.pageY,
@@ -281,16 +313,7 @@ canvas.addEventListener('click', function (event) {
 		column = Math.floor(clickY / SQUARE_WIDTH),
 		index = (column * offset) + row;
 
-	if(board[index] == HIDDEN_BOMB_SQUARE 
-		&& board[index] != FLAGGED_BOMB_SQUARE) {
-		gameOver();
-	} 
-
-	if(board[index] == HIDDEN_BLANK_SQUARE
-		&& board[index] != FLAGGED_BLANK_SQUARE) {
-		exposeArea(index);
-	}
-
+	exposeSquare(index);
 	renderBoard();
 	
 }, false);
