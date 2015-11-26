@@ -14,7 +14,11 @@ const HIDDEN_BLANK_SQUARE = 0,
 	EXPOSED_NUMBER_ONE = 6,
 	EXPOSED_NUMBER_TWO = 7,
 	EXPOSED_NUMBER_THREE = 8,
-	EXPOSED_NUMBER_FOUR = 9;
+	EXPOSED_NUMBER_FOUR = 9,
+	EXPOSED_NUMBER_FIVE = 10,
+	EXPOSED_NUMBER_SIX = 11,
+	EXPOSED_NUMBER_SEVEN = 12,
+	EXPOSED_NUMBER_EIGHT = 13;
 
 const SQUARE_WIDTH = 30, SQUARE_HEIGHT = 30;
 
@@ -28,6 +32,10 @@ window.onload = function() {
 	document.getElementById("exposedTwo").style.display = "none";
 	document.getElementById("exposedThree").style.display = "none";
 	document.getElementById("exposedFour").style.display = "none";
+	document.getElementById("exposedFive").style.display = "none";
+	document.getElementById("exposedSix").style.display = "none";
+	document.getElementById("exposedSeven").style.display = "none";
+	document.getElementById("exposedEight").style.display = "none";
 	document.getElementById("hidden").style.display = "none";
 	document.getElementById("flagged").style.display = "none";
 
@@ -168,7 +176,23 @@ function renderBoard() {
 			case EXPOSED_NUMBER_FOUR:
 				// exposed four
 				image_name = "exposedFour";
-				break;				
+				break;	
+			case EXPOSED_NUMBER_FIVE:
+				// exposed four
+				image_name = "exposedFive";
+				break;
+			case EXPOSED_NUMBER_SIX:
+				// exposed four
+				image_name = "exposedSix";
+				break;
+			case EXPOSED_NUMBER_SEVEN:
+				// exposed four
+				image_name = "exposedSeven";
+				break;
+			case EXPOSED_NUMBER_EIGHT:
+				// exposed four
+				image_name = "exposedEight";
+				break;			
 			default:
 				image_name = "hidden";
 				break;
@@ -205,26 +229,59 @@ function gameOver() {
 /*
 	Exposes blank area.
 */
-function exposeBlankArea(index) {
-	
+function exposeNeighbours(index) {
+		/*
+		xoo
+		xmo  y - 1
+			xoo
+		*/	
+		exposeSquare(index-1-offset);
+		exposeSquare(index-1);
+		exposeSquare(index-1+offset);
+
+		/*	
+			oxo
+			omo  y = 0
+			oxo
+		*/
+		exposeSquare(index-offset);
+		exposeSquare(index+offset);
+
+		/*
+			oox
+			omx  y + 1
+			oox
+		*/	
+		exposeSquare(index+1-offset);
+		exposeSquare(index+1);
+		exposeSquare(index+1+offset);		
 }
 
 function exposeBlankSquare(index) {
+	exposeNeighbours(index);
+	board[index] = EXPOSED_BLANK_SQUARE;
+}
+
+function exposeSquare(index) {
 	if (isNaN(index) || index > board.length || index < 0) {
 		return -1;
 	}
 	
 	switch(countBombsAround(index)) {
-		case 0: board[index] = EXPOSED_BLANK_SQUARE; break;
+		case 0: exposeBlankSquare(index); break;
 		case 1: board[index] = EXPOSED_NUMBER_ONE; break;
 		case 2: board[index] = EXPOSED_NUMBER_TWO; break;
 		case 3: board[index] = EXPOSED_NUMBER_THREE; break;
 		case 4: board[index] = EXPOSED_NUMBER_FOUR; break;
+		case 5: board[index] = EXPOSED_NUMBER_FIVE; break;
+		case 6: board[index] = EXPOSED_NUMBER_SIX; break;
+		case 7: board[index] = EXPOSED_NUMBER_SEVEN; break;
+		case 8: board[index] = EXPOSED_NUMBER_EIGHT; break;
 		default: board[index] = EXPOSED_BLANK_SQUARE; break;
 	}
 }
 
-function exposeSquare(index) {
+function exposeAnySquare(index) {
 	if (isNaN(index) || index > board.length || index < 0) {
 		return -1;
 	}
@@ -236,9 +293,8 @@ function exposeSquare(index) {
 
 	if(board[index] == HIDDEN_BLANK_SQUARE
 		&& board[index] != FLAGGED_BLANK_SQUARE) {
-		exposeBlankSquare(index);
+		exposeSquare(index);
 	}
-
 }
 
 /*
@@ -281,26 +337,37 @@ function countBombsAround(index) {
 		y = index - (x*offset);
 
 	/*
-		ooo
+		xoo
 		xmo  y - 1
-		ooo
+		xoo
 	*/	
-	if(((index - (x*offset)) != 0) && isBomb(index-1)) { count++; }
+	if(((index - (x*offset)) != 0) 
+		&& isBomb(index-1-offset)) { count++; }
+	if(((index - (x*offset)) != 0) 
+		&& isBomb(index-1)) { count++; }
+	if(((index - (x*offset)) != 0) 
+		&& isBomb(index-1+offset)) { count++; }
 	 
 	/*	
 		oxo
 		omo  y = 0
 		oxo
 	*/
-	if((Math.floor(index / offset) > 0) && isBomb(index-offset)) { count++; }
+	if((Math.floor(index / offset) > 0) 
+		&& isBomb(index-offset)) { count++; }
 	if(isBomb(index+offset)) { count++; }
 	
 	/*
-		ooo
+		oox
 		omx  y + 1
-		ooo
+		oox
 	*/	
-	if(((index - (x*offset)) != (offset-1)) && isBomb(index+1)) { count++; }
+	if(((index - (x*offset)) != (offset-1)) 
+		&& isBomb(index+1-offset)) { count++; }
+	if(((index - (x*offset)) != (offset-1)) 
+		&& isBomb(index+1)) { count++; }
+	if(((index - (x*offset)) != (offset-1)) 
+		&& isBomb(index+1+offset)) { count++; }
 	
 	return count;
 }
@@ -313,7 +380,7 @@ canvas.addEventListener('click', function (event) {
 		column = Math.floor(clickY / SQUARE_WIDTH),
 		index = (column * offset) + row;
 
-	exposeSquare(index);
+	exposeAnySquare(index);
 	renderBoard();
 	
 }, false);
