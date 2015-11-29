@@ -230,6 +230,41 @@ function gameOver() {
 	Exposes blank area.
 */
 function exposeNeighbours(index) {
+		board[index] = EXPOSED_BLANK_SQUARE;
+
+		if(countBombsAround(index-1-offset) == 0) {
+			exposeNeighbours(index-1-offset);
+		}
+
+		if(countBombsAround(index-1) == 0) {
+			exposeNeighbours(index-1);
+		}
+
+		if(countBombsAround(index-1+offset) == 0) {
+			exposeNeighbours(index-1+offset);
+		}
+
+		if(countBombsAround(index-offset) == 0) {
+			exposeNeighbours(index-offset);
+		}
+
+		if(countBombsAround(index+offset) == 0) {
+			exposeNeighbours(index+offset);
+		}
+
+		if(countBombsAround(index+1-offset) == 0) {
+			exposeNeighbours(index+1-offset);
+		}
+
+		if(countBombsAround(index+1) == 0) {
+			exposeNeighbours(index+1);
+		}
+
+		if(countBombsAround(index+1+offset) == 0) {
+			exposeNeighbours(index+1+offset);
+		}
+
+
 		/*
 		xoo
 		xmo  y - 1
@@ -257,18 +292,13 @@ function exposeNeighbours(index) {
 		exposeSquare(index+1+offset);		
 }
 
-function exposeBlankSquare(index) {
-	exposeNeighbours(index);
-	board[index] = EXPOSED_BLANK_SQUARE;
-}
-
 function exposeSquare(index) {
 	if (isNaN(index) || index > board.length || index < 0) {
 		return -1;
 	}
 	
 	switch(countBombsAround(index)) {
-		case 0: exposeBlankSquare(index); break;
+		case 0: exposeNeighbours(index); break;
 		case 1: board[index] = EXPOSED_NUMBER_ONE; break;
 		case 2: board[index] = EXPOSED_NUMBER_TWO; break;
 		case 3: board[index] = EXPOSED_NUMBER_THREE; break;
