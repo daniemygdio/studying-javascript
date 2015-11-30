@@ -22,7 +22,7 @@ const HIDDEN_BLANK_SQUARE = 0,
 
 const SQUARE_WIDTH = 30, SQUARE_HEIGHT = 30;
 
-var offset = 0; // width of the board to help calculate board from 1D array
+var boardWidth = 0; // width of the board to help calculate board from 1D array
 
 window.onload = function() {
 	// hiding img elements used to retrieve the images for the canvas
@@ -47,7 +47,7 @@ window.onload = function() {
 	Places a bomb in the board.
 */
 function placeBomb(index) {
-	//var index = row * offset + column;
+	//var index = row * boardWidth + column;
 
 	bombs.push(index);
 	board[index] = HIDDEN_BOMB_SQUARE;	
@@ -84,7 +84,7 @@ function loadBoard(width, height, numberOfBombs) {
 	}
 
 	var sizeOfBoard = width * height;
-	offset = width;
+	boardWidth = width;
 
 	var i = 0;
 	for (i = 0; i < sizeOfBoard; i++) {
@@ -189,8 +189,8 @@ function renderBoard() {
 				break;
 		}
 		
-		var row = Math.floor(i / offset),
-			column = i - (row*offset);
+		var row = Math.floor(i / boardWidth),
+			column = i - (row*boardWidth);
 
 		image = document.getElementById(image_name);
 		context.drawImage(image, column*30, row*30);	
@@ -198,16 +198,10 @@ function renderBoard() {
 }
 
 /*
-	Exposes all bombs.
-	TODO: make game stop.
+	Exposes all bombs and restarts the game.
 */
 function gameOver() {
 	var i = 0;
-
-	// expose all the bombs, but not the flagged squares
-	// #1 - iterate over array looking for HIDDEN_BOMB_SQUARE
-	// #2 - find them, make them EXPOSED_HIDDEN_BOMBS
-	// #3 - LATER - make something to stop new changes - or restart game
 
 	for (i = 0; i < board.length; i++) {
 		if(board[i] == HIDDEN_BOMB_SQUARE) {
@@ -220,34 +214,25 @@ function gameOver() {
 	location.reload();
 }
 
-// 
-
 /*
 	Exposes neighbour blank area.
 */
 function exposeNeighbours(index) {
-		//board[index] = EXPOSED_BLANK_SQUARE;
-
-		// if the square is blank and there's no other blank square around
-		// just open all the squares around
-
-		// so have to check if the squares around are blank and no number
-
 	if(board[index] == HIDDEN_BLANK_SQUARE) {
-			board[index] = EXPOSED_BLANK_SQUARE;
+		board[index] = EXPOSED_BLANK_SQUARE;
 		
-		var x = Math.floor(index / offset),
-		y = index - (x*offset);
+		var x = Math.floor(index / boardWidth),
+		y = index - (x*boardWidth);
 
 		/*
 		xoo
 		xmo  y - 1
 		xoo
 		*/	
-		if((index - (x*offset)) != 0) { 
-			exposeSquare(index-1-offset); 
+		if((index - (x*boardWidth)) != 0) { 
+			exposeSquare(index-1-boardWidth); 
 		 	exposeSquare(index-1); 
-			exposeSquare(index-1+offset);
+			exposeSquare(index-1+boardWidth);
 		}
 
 		/*	
@@ -255,26 +240,27 @@ function exposeNeighbours(index) {
 			omo  y = 0
 			oxo
 		*/
-		if(Math.floor(index / offset) > 0) {
-			exposeSquare(index-offset);	}
+		if(Math.floor(index / boardWidth) > 0) {
+			exposeSquare(index-boardWidth);	}
 
-		exposeSquare(index+offset);
+		exposeSquare(index+boardWidth);
 
 		/*
 			oox
 			omx  y + 1
 			oox
 		*/	
-		if((index - (x*offset)) != (offset-1)) {
-			exposeSquare(index+1-offset);
+		if((index - (x*boardWidth)) != (boardWidth-1)) {
+			exposeSquare(index+1-boardWidth);
 			exposeSquare(index+1);
-			exposeSquare(index+1+offset);
+			exposeSquare(index+1+boardWidth);
 		}		
 	}	
 }
 
-
-
+/*
+	Exposes a blank square.
+*/
 function exposeSquare(index) {
 	if (isNaN(index) || index > board.length || index < 0) {
 		return -1;
@@ -294,7 +280,10 @@ function exposeSquare(index) {
 	}
 }
 
-function exposeAnySquare(index) {
+/*
+	Check which kind of square is the given one and take an action.
+*/
+function checkSquare(index) {
 	if (isNaN(index) || index > board.length || index < 0) {
 		return -1;
 	}
@@ -339,6 +328,10 @@ function flagSquare(index) {
 	}
 }
 
+/*
+	Returns the number of bombs around the given square.
+	Returns -1 if invalid input.
+*/
 function countBombsAround(index) {
 	var count = 0;
 
@@ -346,64 +339,51 @@ function countBombsAround(index) {
 		return -1;
 	}
 	
-	var x = Math.floor(index / offset),
-		y = index - (x*offset);
+	var x = Math.floor(index / boardWidth),
+		y = index - (x*boardWidth);
 
 	/*
 		xoo
 		xmo  y - 1
 		xoo
 	*/	
-	if(((index - (x*offset)) != 0) 
-		&& isBomb(index-1-offset)) { count++; }
-	if(((index - (x*offset)) != 0) 
+	if(((index - (x*boardWidth)) != 0) 
+		&& isBomb(index-1-boardWidth)) { count++; }
+	if(((index - (x*boardWidth)) != 0) 
 		&& isBomb(index-1)) { count++; }
-	if(((index - (x*offset)) != 0) 
-		&& isBomb(index-1+offset)) { count++; }
+	if(((index - (x*boardWidth)) != 0) 
+		&& isBomb(index-1+boardWidth)) { count++; }
 	 
 	/*	
 		oxo
 		omo  y = 0
 		oxo
 	*/
-	if((Math.floor(index / offset) > 0) 
-		&& isBomb(index-offset)) { count++; }
-	if(isBomb(index+offset)) { count++; }
+	if((Math.floor(index / boardWidth) > 0) 
+		&& isBomb(index-boardWidth)) { count++; }
+	if(isBomb(index+boardWidth)) { count++; }
 	
 	/*
 		oox
 		omx  y + 1
 		oox
 	*/	
-	if(((index - (x*offset)) != (offset-1)) 
-		&& isBomb(index+1-offset)) { count++; }
-	if(((index - (x*offset)) != (offset-1)) 
+	if(((index - (x*boardWidth)) != (boardWidth-1)) 
+		&& isBomb(index+1-boardWidth)) { count++; }
+	if(((index - (x*boardWidth)) != (boardWidth-1)) 
 		&& isBomb(index+1)) { count++; }
-	if(((index - (x*offset)) != (offset-1)) 
-		&& isBomb(index+1+offset)) { count++; }
+	if(((index - (x*boardWidth)) != (boardWidth-1)) 
+		&& isBomb(index+1+boardWidth)) { count++; }
 	
 	return count;
 }
-
-
-canvas.addEventListener('click', function (event) {
-	var clickX = event.pageX,
-		clickY = event.pageY,
-		row = Math.floor(clickX / SQUARE_HEIGHT),
-		column = Math.floor(clickY / SQUARE_WIDTH),
-		index = (column * offset) + row;
-
-	exposeAnySquare(index);
-	renderBoard();
-	
-}, false);
 
 canvas.addEventListener('mousedown', function (event) {
     var clickX = event.pageX,
 		clickY = event.pageY,
 		row = Math.floor(clickX / SQUARE_HEIGHT),
 		column = Math.floor(clickY / SQUARE_WIDTH),
-		index = (column * offset) + row;
+		index = (column * boardWidth) + row;
 
     var right = 2, left = 0;
    	if(event.button === right){
@@ -414,9 +394,9 @@ canvas.addEventListener('mousedown', function (event) {
 		clickY = event.pageY,
 		row = Math.floor(clickX / SQUARE_HEIGHT),
 		column = Math.floor(clickY / SQUARE_WIDTH),
-		index = (column * offset) + row;
+		index = (column * boardWidth) + row;
 
-		exposeAnySquare(index);
+		checkSquare(index);
 		renderBoard();	
     }
 }, false);
