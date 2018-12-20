@@ -43,26 +43,26 @@ window.onload = function() {
 	renderBoard();
 };
 
-/*
-	Places a bomb in the board.
+/**
+* Places a bomb in the board.
 */
 function placeBomb(index) {
 	//var index = row * boardWidth + column;
 
 	bombs.push(index);
-	board[index] = HIDDEN_BOMB_SQUARE;	
+	board[index] = HIDDEN_BOMB_SQUARE;
 }
 
-/*
-	Returns true if the given position in the board is a bomb and false otherwise.
-	False if index is out of bounds of board[].
+/**
+* Returns true if the given position in the board is a bomb and false otherwise.
+* False if index is out of bounds of board[].
 */
 function isBomb(index) {
 	if (index > board.length || index < 0) {
 		return false;
 	}
 
-	if(board[index] == HIDDEN_BOMB_SQUARE 
+	if(board[index] == HIDDEN_BOMB_SQUARE
 		|| board[index] == EXPOSED_BOMB_SQUARE
 		|| board[index] == FLAGGED_BOMB_SQUARE) {
 		return true;
@@ -71,8 +71,8 @@ function isBomb(index) {
 	return false;
 }
 
-/*
-	Creates the array representing the board to be rendered.
+/**
+* Creates the array representing the board to be rendered.
 */
 function loadBoard(width, height, numberOfBombs) {
 	if (width <= 0 || isNaN(width)) {
@@ -99,7 +99,7 @@ function loadBoard(width, height, numberOfBombs) {
 
 		numberOfBombs = Math.floor(sizeOfBoard*0.3);
 	}
-	
+
 	for(i = 0; i < numberOfBombs; i++) {
 		var bomb = getRandomIntInclusive(0, (sizeOfBoard-1));
 
@@ -111,22 +111,22 @@ function loadBoard(width, height, numberOfBombs) {
 	}
 }
 
-/*
-	Returns a random integer between min (included) and max (included)
-	Using Math.round() will give you a non-uniform distribution!
+/**
+* Returns a random integer between min (included) and max (included)
+* Using Math.round() will give you a non-uniform distribution!
 */
 function getRandomIntInclusive(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-/*
-	Renders the array representing the board.
+/**
+* Renders the array representing the board.
 */
 function renderBoard() {
 	var image_name = "", image = null, i = 0;
 
 	for (i = 0; i < board.length; i++) {
-		
+
 		switch(board[i]) {
 			case HIDDEN_BLANK_SQUARE:
 				// hidden square
@@ -159,15 +159,15 @@ function renderBoard() {
 			case EXPOSED_NUMBER_TWO:
 				// exposed four
 				image_name = "exposedTwo";
-				break;	
+				break;
 			case EXPOSED_NUMBER_THREE:
 				// exposed four
 				image_name = "exposedThree";
-				break;				
+				break;
 			case EXPOSED_NUMBER_FOUR:
 				// exposed four
 				image_name = "exposedFour";
-				break;	
+				break;
 			case EXPOSED_NUMBER_FIVE:
 				// exposed four
 				image_name = "exposedFive";
@@ -183,22 +183,22 @@ function renderBoard() {
 			case EXPOSED_NUMBER_EIGHT:
 				// exposed four
 				image_name = "exposedEight";
-				break;			
+				break;
 			default:
 				image_name = "hidden";
 				break;
 		}
-		
+
 		var row = Math.floor(i / boardWidth),
 			column = i - (row*boardWidth);
 
 		image = document.getElementById(image_name);
-		context.drawImage(image, column*30, row*30);	
+		context.drawImage(image, column*30, row*30);
 	}
 }
 
-/*
-	Exposes all bombs and restarts the game.
+/**
+* Exposes all bombs and restarts the game.
 */
 function gameOver() {
 	var i = 0;
@@ -209,18 +209,18 @@ function gameOver() {
 		}
 	}
 
-	renderBoard();	
+	renderBoard();
 	window.alert("GAME OVER!");
 	location.reload();
 }
 
-/*
-	Exposes neighbour blank area.
+/**
+* Exposes neighbour blank area.
 */
 function exposeNeighbours(index) {
 	if(board[index] == HIDDEN_BLANK_SQUARE) {
 		board[index] = EXPOSED_BLANK_SQUARE;
-		
+
 		var x = Math.floor(index / boardWidth),
 		y = index - (x*boardWidth);
 
@@ -228,14 +228,14 @@ function exposeNeighbours(index) {
 		xoo
 		xmo  y - 1
 		xoo
-		*/	
-		if((index - (x*boardWidth)) != 0) { 
-			exposeSquare(index-1-boardWidth); 
-		 	exposeSquare(index-1); 
+		*/
+		if((index - (x*boardWidth)) != 0) {
+			exposeSquare(index-1-boardWidth);
+		 	exposeSquare(index-1);
 			exposeSquare(index-1+boardWidth);
 		}
 
-		/*	
+		/*
 			oxo
 			omo  y = 0
 			oxo
@@ -249,23 +249,23 @@ function exposeNeighbours(index) {
 			oox
 			omx  y + 1
 			oox
-		*/	
+		*/
 		if((index - (x*boardWidth)) != (boardWidth-1)) {
 			exposeSquare(index+1-boardWidth);
 			exposeSquare(index+1);
 			exposeSquare(index+1+boardWidth);
-		}		
-	}	
+		}
+	}
 }
 
-/*
-	Exposes a blank square.
+/**
+* Exposes a blank square.
 */
 function exposeSquare(index) {
 	if (isNaN(index) || index > board.length || index < 0) {
 		return -1;
 	}
-	
+
 	switch(countBombsAround(index)) {
 		case 0: exposeNeighbours(index); break;
 		case 1: board[index] = EXPOSED_NUMBER_ONE; break;
@@ -280,18 +280,18 @@ function exposeSquare(index) {
 	}
 }
 
-/*
-	Check which kind of square is the given one and take an action.
+/**
+* Check which kind of square is the given one and take an action.
 */
 function checkSquare(index) {
 	if (isNaN(index) || index > board.length || index < 0) {
 		return -1;
 	}
-	
-	if(board[index] == HIDDEN_BOMB_SQUARE 
+
+	if(board[index] == HIDDEN_BOMB_SQUARE
 		&& board[index] != FLAGGED_BOMB_SQUARE) {
 		gameOver();
-	} 
+	}
 
 	if(board[index] == HIDDEN_BLANK_SQUARE
 		&& board[index] != FLAGGED_BLANK_SQUARE) {
@@ -299,8 +299,8 @@ function checkSquare(index) {
 	}
 }
 
-/*
-	Flags a square or removes the flag if it's already flagged.
+/**
+* Flags a square or removes the flag if it's already flagged.
 */
 function flagSquare(index) {
 	if (isNaN(index) || index > board.length || index < 0) {
@@ -328,9 +328,9 @@ function flagSquare(index) {
 	}
 }
 
-/*
-	Returns the number of bombs around the given square.
-	Returns -1 if invalid input.
+/**
+* Returns the number of bombs around the given square.
+* Returns -1 if invalid input.
 */
 function countBombsAround(index) {
 	var count = 0;
@@ -338,7 +338,7 @@ function countBombsAround(index) {
 	if (isNaN(index) || index > board.length || index < 0) {
 		return -1;
 	}
-	
+
 	var x = Math.floor(index / boardWidth),
 		y = index - (x*boardWidth);
 
@@ -346,35 +346,35 @@ function countBombsAround(index) {
 		xoo
 		xmo  y - 1
 		xoo
-	*/	
-	if(((index - (x*boardWidth)) != 0) 
+	*/
+	if(((index - (x*boardWidth)) != 0)
 		&& isBomb(index-1-boardWidth)) { count++; }
-	if(((index - (x*boardWidth)) != 0) 
+	if(((index - (x*boardWidth)) != 0)
 		&& isBomb(index-1)) { count++; }
-	if(((index - (x*boardWidth)) != 0) 
+	if(((index - (x*boardWidth)) != 0)
 		&& isBomb(index-1+boardWidth)) { count++; }
-	 
-	/*	
+
+	/*
 		oxo
 		omo  y = 0
 		oxo
 	*/
-	if((Math.floor(index / boardWidth) > 0) 
+	if((Math.floor(index / boardWidth) > 0)
 		&& isBomb(index-boardWidth)) { count++; }
 	if(isBomb(index+boardWidth)) { count++; }
-	
+
 	/*
 		oox
 		omx  y + 1
 		oox
-	*/	
-	if(((index - (x*boardWidth)) != (boardWidth-1)) 
+	*/
+	if(((index - (x*boardWidth)) != (boardWidth-1))
 		&& isBomb(index+1-boardWidth)) { count++; }
-	if(((index - (x*boardWidth)) != (boardWidth-1)) 
+	if(((index - (x*boardWidth)) != (boardWidth-1))
 		&& isBomb(index+1)) { count++; }
-	if(((index - (x*boardWidth)) != (boardWidth-1)) 
+	if(((index - (x*boardWidth)) != (boardWidth-1))
 		&& isBomb(index+1+boardWidth)) { count++; }
-	
+
 	return count;
 }
 
@@ -397,7 +397,7 @@ canvas.addEventListener('mousedown', function (event) {
 		index = (column * boardWidth) + row;
 
 		checkSquare(index);
-		renderBoard();	
+		renderBoard();
     }
 }, false);
 
